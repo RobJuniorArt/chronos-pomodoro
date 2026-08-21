@@ -15,12 +15,12 @@
   font-size: 4.2rem;
   font-weight: bold;
   text-decoration: none;
-  color: var(--link-color);
+  color: var(--primary);
   transition: all 0.1s ease-in-out;
 }
 
 .logoLink:hover {
-  filter: brightness(150%);
+  filter: brightness(80%);
 }
 
 .logoLink svg {
