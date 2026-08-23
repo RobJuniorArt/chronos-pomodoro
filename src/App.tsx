@@ -8,6 +8,7 @@ import { DefaultInput } from "./components/DefaultInput";
 import { Cycles } from "./components/Cycles";
 import { DefaultButton } from "./components/DefaultButton";
 import { PlayCircleIcon, PlayIcon } from "lucide-react";
+import { Footer } from "./components/Footer";
 
 function App() {
   return (
@@ -41,6 +42,9 @@ function App() {
             <DefaultButton icon={<PlayCircleIcon />} />
           </div>
         </form>
+      </Container>
+      <Container>
+        <Footer />
       </Container>
     </div>
   );
