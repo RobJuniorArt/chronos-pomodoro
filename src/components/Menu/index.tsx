@@ -11,13 +11,11 @@ export function Menu() {
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
   ) {
     e.preventDefault();
-    let themeColor = theme;
-    if (theme === "dark") {
-      themeColor = "light";
-    } else {
-      themeColor = "dark";
-    }
-    setTheme(themeColor);
+
+    setTheme((prevTheme) => {
+      const nextTheme = prevTheme === "dark" ? "light" : "dark";
+      return nextTheme;
+    });
   }
 
   return (
