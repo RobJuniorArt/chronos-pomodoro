@@ -61,6 +61,7 @@ export function MainForm() {
           type="text"
           placeholder="Digite uma task"
           ref={taskNameInput}
+          disabled={!!state.activeTask}
         />
       </div>
       <div className="formRow">
