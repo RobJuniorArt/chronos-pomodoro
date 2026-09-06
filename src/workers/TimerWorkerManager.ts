@@ -3,7 +3,9 @@ let instance: TimerWorkerManager | null = null;
 export class TimerWorkerManager {
   private worker: Worker;
   private constructor() {
-    this.worker = new Worker(new URL("./timerWorker.js", import.meta.url));
+    this.worker = new Worker(new URL("./timerWork.js", import.meta.url), {
+      type: "module",
+    });
   }
   static getInstance() {
     if (!instance) {
@@ -12,7 +14,7 @@ export class TimerWorkerManager {
     return instance;
   }
   postMessage(message: any) {
-    (this, this.worker.postMessage(message));
+    this.worker.postMessage(message);
   }
   onmessage(cb: (e: MessageEvent) => void) {
     this.worker.onmessage = cb;
