@@ -9,7 +9,6 @@ import { getNextCycle } from "../../utils/getNextCycle";
 import { getNexCycleType } from "../../utils/getNextCycleType";
 import { TaskActionTypes } from "../../contexts/TaskContext/taskActions";
 import { Tips } from "../Tips";
-import TimerWorker from "../../workers/timerWork.js?worker";
 
 export function MainForm() {
   const { state, dispatch } = useTaskContext();
@@ -40,13 +39,6 @@ export function MainForm() {
     };
 
     dispatch({ type: TaskActionTypes.START_TASK, payload: newTask });
-
-    const worker = new TimerWorker();
-
-    worker.postMessage("Olá Mundo");
-    worker.onmessage = function (event) {
-      console.log("Principal recebeu:", event.data);
-    };
   }
 
   function handleInterruptTask() {
