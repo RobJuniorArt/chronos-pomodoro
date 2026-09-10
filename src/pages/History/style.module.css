@@ -44,3 +44,12 @@
 .thSort:hover {
   filter: brightness(80%);
 }
+
+.historicoVazio {
+  width: 100%;
+  min-width: 64rem;
+  font-size: 1.6rem;
+  text-align: center;
+  padding: 5rem;
+  font-weight: bold;
+}
