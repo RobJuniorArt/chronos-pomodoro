@@ -7,7 +7,6 @@ import {
   SettingsIcon,
   SunIcon,
 } from "lucide-react";
-import { Link } from "react-router";
 import { RouterLink } from "../RouterLink";
 
 type AvailableTheme = "dark" | "light";
@@ -51,7 +50,7 @@ export function Menu() {
       </RouterLink>
       <RouterLink
         className={styles.menuLink}
-        href="#"
+        href="/history/"
         aria-label="Ver historico"
         title="Ver historico"
       >
