@@ -22,7 +22,8 @@ body {
     "Helvetica Neue",
     sans-serif;
   font-size: 1.6rem; /*16px*/
-  background: linear-gradient(45deg, var(--gray-900), var(--gray-700));
+  /* background: linear-gradient(45deg, var(--gray-900), var(--gray-700)); */
+  background: var(--gray-900);
   color: var(--text-default);
 }
 
