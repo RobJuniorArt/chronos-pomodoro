@@ -8,9 +8,10 @@ import styles from "./style.module.css";
 import { useRef } from "react";
 import { useTaskContext } from "../../contexts/TaskContext/useTaskContext";
 import { showMessage } from "../../adapters/showMessage";
+import { TaskActionTypes } from "../../contexts/TaskContext/taskActions";
 
 export function Settings() {
-  const { state } = useTaskContext();
+  const { state, dispatch } = useTaskContext();
   const workTimeInput = useRef<HTMLInputElement>(null);
   const shortBreakTimeInput = useRef<HTMLInputElement>(null);
   const longBreakTimeInput = useRef<HTMLInputElement>(null);
@@ -20,21 +21,21 @@ export function Settings() {
     showMessage.dismiss();
     const formErrors = [];
     const workTime = Number(workTimeInput.current?.value);
-    const shortBreak = Number(shortBreakTimeInput.current?.value);
-    const longBreak = Number(longBreakTimeInput.current?.value);
+    const shortBreakTime = Number(shortBreakTimeInput.current?.value);
+    const longBreakTime = Number(longBreakTimeInput.current?.value);
 
-    if (isNaN(workTime) || isNaN(shortBreak) || isNaN(longBreak)) {
+    if (isNaN(workTime) || isNaN(shortBreakTime) || isNaN(longBreakTime)) {
       formErrors.push("Digite apenas números");
     }
 
     if (workTime < 1 || workTime > 99) {
       formErrors.push("Digite apenas Valores entre 1 e 99 para foco");
     }
-    if (shortBreak < 1 || shortBreak > 30) {
+    if (shortBreakTime < 1 || shortBreakTime > 30) {
       formErrors.push("Digite apenas Valores entre 1 e 30 para descanso curto");
     }
 
-    if (longBreak < 1 || longBreak > 30) {
+    if (longBreakTime < 1 || longBreakTime > 30) {
       formErrors.push("Digite apenas Valores entre 1 e 60 para descanso longo");
     }
 
@@ -44,6 +45,16 @@ export function Settings() {
       });
       return;
     }
+
+    dispatch({
+      type: TaskActionTypes.CHANGE_SETTINGS,
+      payload: {
+        workTime,
+        shortBreakTime,
+        longBreakTime,
+      },
+    });
+    showMessage.success("Configurações salvas.");
   }
 
   return (
