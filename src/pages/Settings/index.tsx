@@ -5,7 +5,7 @@ import { DefaultInput } from "../../components/DefaultInput";
 import { Heading } from "../../components/Heading";
 import { MainTemplate } from "../../templates/MainTemplate";
 import styles from "./style.module.css";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useTaskContext } from "../../contexts/TaskContext/useTaskContext";
 import { showMessage } from "../../adapters/showMessage";
 import { TaskActionTypes } from "../../contexts/TaskContext/taskActions";
@@ -15,6 +15,10 @@ export function Settings() {
   const workTimeInput = useRef<HTMLInputElement>(null);
   const shortBreakTimeInput = useRef<HTMLInputElement>(null);
   const longBreakTimeInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    document.title = "Configurações - Chronos Pomodoro";
+  }, []);
 
   function handleSaveSettings(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -35,7 +39,7 @@ export function Settings() {
       formErrors.push("Digite apenas Valores entre 1 e 30 para descanso curto");
     }
 
-    if (longBreakTime < 1 || longBreakTime > 30) {
+    if (longBreakTime < 1 || longBreakTime > 60) {
       formErrors.push("Digite apenas Valores entre 1 e 60 para descanso longo");
     }
 
@@ -65,7 +69,7 @@ export function Settings() {
 
       <Container>
         <p className={styles.configuracoes}>
-          Modifique as configurações para tempo de foco, descanso curso e
+          Modifique as configurações para tempo de foco, descanso curto e
           descanso longo.
         </p>
       </Container>

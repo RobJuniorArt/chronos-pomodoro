@@ -39,6 +39,10 @@ export function History() {
   }, [state.tasks]);
 
   useEffect(() => {
+    document.title = "Histórico - Chronos Pomodoro";
+  }, []);
+
+  useEffect(() => {
     if (!confirmClearHistory) return;
     toast.info("Historico excluído com sucesso.");
     setConfirmCleaHistory(false);
