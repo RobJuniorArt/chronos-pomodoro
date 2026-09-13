@@ -3,7 +3,7 @@ import { Home } from "../../pages/Home";
 import { AboutPomodoro } from "../../pages/AboutPomodoro";
 import { NotFound } from "../../pages/NotFound";
 import { useEffect } from "react";
-import { History } from "../../pages/History";
+import { History } from "../../pages/History/index";
 import { Settings } from "../../pages/Settings";
 
 function ScrollToTop() {

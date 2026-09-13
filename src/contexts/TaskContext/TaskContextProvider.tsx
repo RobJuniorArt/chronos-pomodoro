@@ -25,29 +25,32 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
   });
 
   const playBeepRef = useRef<ReturnType<typeof loadBeep> | null>(null);
-  const worker = TimerWorkerManager.getInstance();
+  const onMessageCallbackRef = useRef<(e: MessageEvent) => void>(() => {});
 
-  worker.onmessage((e) => {
-    const countDownSeconds = e.data;
+  useEffect(() => {
+    onMessageCallbackRef.current = (e: MessageEvent) => {
+      const countDownSeconds = e.data;
 
-    if (countDownSeconds <= 0) {
-      if (playBeepRef.current) {
-        playBeepRef.current();
-        playBeepRef.current = null;
+      if (countDownSeconds <= 0) {
+        if (playBeepRef.current) {
+          playBeepRef.current();
+          playBeepRef.current = null;
+        }
+        dispatch({ type: TaskActionTypes.COMPLETE_TASK });
+        TimerWorkerManager.getInstance().terminate();
+      } else {
+        dispatch({
+          type: TaskActionTypes.COUNT_DOWN,
+          payload: { secondsRemaining: countDownSeconds },
+        });
       }
-      dispatch({
-        type: TaskActionTypes.COMPLETE_TASK,
-      });
-      worker.terminate();
-    } else {
-      dispatch({
-        type: TaskActionTypes.COUNT_DOWN,
-        payload: { secondsRemaining: countDownSeconds },
-      });
-    }
+    };
   });
 
   useEffect(() => {
+    const worker = TimerWorkerManager.getInstance();
+    worker.onmessage((e) => onMessageCallbackRef.current(e));
+
     localStorage.setItem("state", JSON.stringify(state));
 
     if (!state.activeTask) {
@@ -55,9 +58,8 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
     }
 
     document.title = `${state.formattedSecondsRemaining} - Chronos Pomodoro`;
-
     worker.postMessage(state);
-  }, [worker, state]);
+  }, [state]);
 
   useEffect(() => {
     if (state.activeTask && playBeepRef.current == null) {

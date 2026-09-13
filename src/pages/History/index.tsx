@@ -7,47 +7,31 @@ import styles from "./style.module.css";
 import { useTaskContext } from "../../contexts/TaskContext/useTaskContext";
 import { formatDate } from "../../utils/formatDate";
 import { getTaskStatus } from "../../utils/getTaskStatus";
-import { useEffect, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { sortTasks, type SortTasksOptions } from "../../utils/sortTasks";
 import { showMessage } from "../../adapters/showMessage";
 import { TaskActionTypes } from "../../contexts/TaskContext/taskActions";
-import { toast } from "react-toastify";
 
 export function History() {
   const { state, dispatch } = useTaskContext();
-  const [confirmClearHistory, setConfirmCleaHistory] = useState(false);
   const hasTasks = state.tasks.length > 0;
-  const [sortTasksOptions, setSortTaskOptions] = useState<SortTasksOptions>(
-    () => {
-      return {
-        tasks: sortTasks({ tasks: state.tasks }),
-        field: "startDate",
-        direction: "desc",
-      };
-    },
-  );
 
-  useEffect(() => {
-    setSortTaskOptions((prevState) => ({
-      ...prevState,
-      tasks: sortTasks({
-        tasks: state.tasks,
-        direction: prevState.direction,
-        field: prevState.field,
-      }),
-    }));
-  }, [state.tasks]);
+  const [sortField, setSortField] =
+    useState<SortTasksOptions["field"]>("startDate");
+  const [sortDirection, setSortDirection] =
+    useState<SortTasksOptions["direction"]>("desc");
+
+  const sortedTasks = useMemo(() => {
+    return sortTasks({
+      tasks: state.tasks,
+      field: sortField,
+      direction: sortDirection,
+    });
+  }, [state.tasks, sortField, sortDirection]);
 
   useEffect(() => {
     document.title = "Histórico - Chronos Pomodoro";
   }, []);
-
-  useEffect(() => {
-    if (!confirmClearHistory) return;
-    toast.info("Historico excluído com sucesso.");
-    setConfirmCleaHistory(false);
-    dispatch({ type: TaskActionTypes.RESET_STATE });
-  }, [confirmClearHistory, dispatch]);
 
   useEffect(() => {
     return () => {
@@ -56,23 +40,16 @@ export function History() {
   }, []);
 
   function handleSortTasks({ field }: Pick<SortTasksOptions, "field">) {
-    const newDirection = sortTasksOptions.direction === "desc" ? "asc" : "desc";
-
-    setSortTaskOptions({
-      tasks: sortTasks({
-        direction: newDirection,
-        tasks: sortTasksOptions.tasks,
-        field,
-      }),
-      direction: newDirection,
-      field,
-    });
+    setSortDirection((prev) => (prev === "desc" ? "asc" : "desc"));
+    setSortField(field);
   }
 
   function handleResetHistory() {
     showMessage.dismiss();
     showMessage.confirm("Tem Certeza que deseja deletar?", (confirmation) => {
-      setConfirmCleaHistory(confirmation);
+      if (!confirmation) return;
+      showMessage.info("Histórico excluído com sucesso.");
+      dispatch({ type: TaskActionTypes.RESET_STATE });
     });
   }
 
@@ -124,7 +101,7 @@ export function History() {
                 </tr>
               </thead>
               <tbody>
-                {sortTasksOptions.tasks.map((task) => {
+                {sortedTasks.map((task) => {
                   const taskTypeDictionary = {
                     workTime: "Foco",
                     shortBreakTime: "Descanso Curto",
